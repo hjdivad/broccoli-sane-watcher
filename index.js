@@ -89,12 +89,10 @@ Watcher.prototype.build = function Watcher_build(filePath) {
 };
 
 function sum(node, cb) {
-  var total = cb(node);
-
-  for (var i = 0; i < node.children.length; i++) {
-    total += sum(node.children[i], cb);
-  }
-
+  var total = 0;
+  node.visitPreOrder(function(node) {
+    total += cb(node);
+  });
   return total;
 }
 
