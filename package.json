@@ -24,7 +24,7 @@
   "dependencies": {
     "broccoli-slow-trees": "^3.0.0",
     "debug": "^2.1.0",
-    "heimdall": "^0.1.0",
+    "heimdalljs": "^0.1.0",
     "rsvp": "^3.0.18",
     "sane": "^1.1.1"
   },
