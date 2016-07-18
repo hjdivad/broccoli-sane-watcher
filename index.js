@@ -61,10 +61,18 @@ Watcher.prototype.build = function Watcher_build(filePath) {
 
   function verboseOutput(run) {
     if (this.options.verbose) {
-      printSlowTrees(heimdall);
+      printSlowTrees(run.graph.__heimdall__);
     }
 
     return run;
+  }
+
+  function totalTime(hash) {
+    hash.totalTime = sum(hash.graph.__heimdall__, function(node) {
+      return node.stats.time.self;
+    });
+
+    return hash;
   }
 
   function appendFilePath(hash) {
@@ -74,10 +82,21 @@ Watcher.prototype.build = function Watcher_build(filePath) {
 
   return this.builder
     .build(addWatchDir)
+    .then(totalTime)
     .then(appendFilePath)
     .then(triggerChange, triggerError)
     .then(verboseOutput.bind(this));
 };
+
+function sum(node, cb) {
+  var total = cb(node);
+
+  for (var i = 0; i < node.children.length; i++) {
+    total += sum(node.children[i], cb);
+  }
+
+  return total;
+}
 
 Watcher.prototype.addWatchDir = function Watcher_addWatchDir(dir) {
   if (this.watched[dir]) {
